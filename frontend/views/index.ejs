@@ -36,8 +36,9 @@ label {
     </Style>
 
 
-    <link href="../node_modules/noty/lib/noty.css" rel="stylesheet" > 
-    <script src="../node_modules/noty/lib/noty.js"></script>
+    <link href="static/noty/lib/noty.css" rel="stylesheet" > 
+    <script src="static/noty/lib/noty.js"></script>
+    <script src="static/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body>
     <input type='checkbox' id='form-switch'>
@@ -47,13 +48,10 @@ label {
   <button type='submit'>Login</button>
 </form>
 
-</body>
-
 <script>
-  new Noty({
-    type: 'success',
-    layout: 'topRight',
-    text: 'Some notification text'
-}).show();
+<% if(data !== null){%>
+  swal('<%= data.alert.title %>','<%= data.alert.text %>', '<%= data.alert.icon %>')
+  <% } %>
 </script>
+</body>
 </html>

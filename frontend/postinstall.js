@@ -3,7 +3,7 @@
 var ncp = require('ncp').ncp;
 
 var source = [];
-var dest = './public/static';
+var dest = './public';
 source['sweetalert'] = './node_modules/sweetalert';
 source['noty'] = './node_modules/noty';
 
