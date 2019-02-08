@@ -33,8 +33,8 @@ router.get('/get', function(req, res, next) {
   
 });
 
-router.get('/edit', function(req, res, next) {
-  
+router.post('/edit', function(req, res, next) {
+
   var name = req.body.name
   var email = req.body.email
   var address = req.body.address
@@ -52,16 +52,18 @@ router.get('/edit', function(req, res, next) {
 });
 
 router.get('/delete', function(req, res, next) {
-  
-  var id = req.body.id
 
-  connection.query("delete from list where id=?",[id],function(err,result){
+  
+  console.log(req);
+  // var id = req.body.id
+
+  // connection.query("delete from list where id=?",[id],function(err,result){
     
-    if(err) throw err;
+  //   if(err) throw err;
     
-    res.json(result)
+  //   res.json(result)
     
-  });
+  // });
   
 });
 
