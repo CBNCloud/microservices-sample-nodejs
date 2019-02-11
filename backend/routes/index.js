@@ -51,22 +51,38 @@ router.post('/edit', function(req, res, next) {
   
 });
 
-router.get('/delete', function(req, res, next) {
+router.post('/delete', function(req, res, next) {
 
-  
-  console.log(req);
-  // var id = req.body.id
+  var id = req.body.id
 
-  // connection.query("delete from list where id=?",[id],function(err,result){
+  connection.query("delete from list where id=?",[id],function(err,result){
     
-  //   if(err) throw err;
+    if(err) throw err;
     
-  //   res.json(result)
+    res.json(result)
     
-  // });
+  });
   
 });
 
+
+router.post('/add', function(req, res, next) {
+
+  var name = req.body.name
+  var email = req.body.email
+  var address = req.body.address
+  var phone = req.body.phone
+
+  console.log(req.body)
+  connection.query("insert list(name,email,address,phone) values(?,?,?,?)",[name,email,address,phone],function(err,result){
+    
+    if(err) throw err;
+    
+    res.json(result)
+    
+  });
+  
+});
 
 
 module.exports = router;
