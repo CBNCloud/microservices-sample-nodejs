@@ -25,7 +25,7 @@
 		console.log(name)
 		
 		var form = $('#delete').find('form');
-		form.find("[name='title']").text("Delete Employees" + name + "?");
+		form.find("[name='title']").text("Delete" + name + "?");
 		form.find("#id").val(id);
 
 	})

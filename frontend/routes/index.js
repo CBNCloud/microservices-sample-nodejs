@@ -20,7 +20,11 @@ var connection = mysql.createConnection({
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  
+
+  if(req.session == null){
+    res.redirect('/home')
+  }
+
   if(req.session.login){
     var msg =  req.session.login
   }else{
@@ -39,7 +43,7 @@ router.post('/',function(req, res) {
   parameter.password = body.password
   
   var hasil = request.post({url: 'http://localhost:3010/login',form: (parameter)},function(err,response,body){
-  
+
   if(err){
     console.log("error : " + err)
   }
@@ -67,6 +71,7 @@ async function getCamoJson() {
 
 router.get('/home',function(req,res,next){
 
+
   if(req.sessionID){
   var data = {};
   
@@ -84,7 +89,6 @@ router.get('/home',function(req,res,next){
 
 
     }else{
-      console.log("ada");
       const hasil = getAll()
         hasil.then(function(result){
           data.msg = sweetalert()
@@ -103,6 +107,8 @@ router.get('/home',function(req,res,next){
 
 router.get('/logout', function(req,res,next){
   req.session.destroy();
+  req.session = null;
+  console.log(req.session);
   res.redirect('/');
 })
 
@@ -146,36 +152,67 @@ router.post('/delete', function(req,res,next){
 
 
   var body = req.body;
-  console.log(body)
-  // var options = {
-  //   method: 'POST',
-  //   uri: 'http://localhost:3020/delete',
-  //   json: true,
-  //   resolveWithFullResponse:true,
-  //   body: {
-  //     id : body.id,
-  //     name : body.name,
-  //     address : body.address,
-  //     email : body.email,
-  //     phone : body.phone
-  //   }
-  // };
+  var options = {
+    method: 'POST',
+    uri: 'http://localhost:3020/delete',
+    json: true,
+    resolveWithFullResponse:true,
+    body: {
+      id : body.id
+    }
+  };
   
-  // const data =  rp(options)
-  
-  // data.then(function(result){
+  const data =  rp(options)
+
+  data.then(function(result){ 
     
-  //   if(result.body.affectedRows > 0){
-  //     req.session.login = {'status' : 1, alert : sweetalert({"title" : "Delete Success","icon" : "success"})}
-  //     res.redirect('/home')
-  //   }else{
-  //     req.session.login = {'status' : 0, alert : sweetalert({"title" : "Delete Failed","icon" : "error"})}
-  //     res.redirect('/home')
-  //   }
-  // })
+    if(result.body.affectedRows > 0){
+      console.log("success")
+      req.session.login = {'status' : 1, alert : sweetalert({"title" : "Delete Success","icon" : "success"})}
+      res.redirect('/home')
+    }else{
+      console.log("failed")
+      req.session.login = {'status' : 0, alert : sweetalert({"title" : "Delete Failed","icon" : "error"})}
+      res.redirect('/home')
+    }
+
+    
+  })
 
 })
 
+
+router.post('/add', function(req,res,next){
+
+  var body = req.body;
+  console.log(body)
+  var options = {
+    method: 'POST',
+    uri: 'http://localhost:3020/add',
+    json: true,
+    resolveWithFullResponse:true,
+    body: {
+      id : body.id,
+      name : body.name,
+      address : body.address,
+      email : body.email,
+      phone : body.phone
+    }
+  };
+  
+  const data =  rp(options)
+  
+  data.then(function(result){    
+    if(result.body.affectedRows > 0){
+      req.session.login = {'status' : 1, alert : sweetalert({"title" : "Insert Success","icon" : "success"})}
+      res.redirect('/home')
+    }else{
+      req.session.login = {'status' : 0, alert : sweetalert({"title" : "Delete Failed","icon" : "error"})}
+      res.redirect('/home')
+    }
+  })
+
+})
 
 function sweetalert(alert = {'title' : null, 'text' : null, 'icon' : null}){
   
