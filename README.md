@@ -16,3 +16,5 @@ or using regular *npm start*
     cd login && npm start
 
 *Make sure port 3000 , 3010 & 3020 is available
+
+Login using http://localhost:3000
