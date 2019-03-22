@@ -2,11 +2,11 @@ FROM node:alpine
 RUN apk add curl screen
 RUN mkdir /app
 WORKDIR /app
-COPY ./login/package.json /app
+COPY ./frontend/package.json /app
 RUN npm install
-COPY ./login/. /app/
+COPY ./frontend/. /app/
 RUN ls -la /app
-expose 3010
+expose 3000
 CMD ["npm","start"]
 
 

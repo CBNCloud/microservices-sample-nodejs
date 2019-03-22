@@ -1,0 +1,134 @@
+# #Frontend
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: micro-frontend
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          env:
+          - name: env_login
+            value: login.default.svc.cluster.local
+          - name: env_frontend
+            value: frontend.default.svc.cluster.local
+          - name: env_backend
+            value: backend.default.svc.cluster.local
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    name: frontend
+spec:
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app: frontend
+  type: ClusterIP
+  sessionAffinity: ClientIP
+
+--- 
+
+#Login
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: login
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: login
+    spec:
+      containers:
+        - name: login
+          image: micro-login
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          env:
+          - name: env_login
+            value: login.default.svc.cluster.local
+          - name: env_frontend
+            value: frontend.default.svc.cluster.local
+          - name: env_backend
+            value: backend.default.svc.cluster.local
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: login
+  labels:
+    name: login
+spec:
+  ports:
+    - port: 80
+      targetPort: 3010
+      protocol: TCP
+  selector:
+    app: backend
+  type: ClusterIP
+  sessionAffinity: ClientIP
+
+---
+
+
+#Backend
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: login
+          image: micro-backend
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          env:
+          - name: env_login
+            value: login.default.svc.cluster.local
+          - name: env_frontend
+            value: frontend.default.svc.cluster.local
+          - name: env_backend
+            value: backend.default.svc.cluster.local
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    name: backend
+spec:
+  ports:
+    - port: 80
+      targetPort: 3020
+      protocol: TCP
+  selector:
+    app: login
+  type: ClusterIP
